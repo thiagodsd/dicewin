@@ -2,10 +2,9 @@
 
 (description)
 
-[toc]
+* [Installation](#installation)
+* [Usage](#usage)
 
-## Installation
+## <a name="installation"></a> Installation
 
-## Usage
-
-## Credits
+## <a name="usage"></a> Usage
