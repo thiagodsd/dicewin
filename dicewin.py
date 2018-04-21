@@ -574,9 +574,9 @@ class graphMainWindow(QtGui.QMainWindow):
           f.seek(0, 0)
           for line in f:
             if '#' not in line:
-              dataRows.append([i for i in ((line.rstrip()).split()) if '.' in i])
+              l = [i for i in ((line.rstrip()).split()) if '.' in i]
+              if len(l) == len(labels): dataRows.append(l)
         for i in range(0, len(dataRows[0])):
-          #print(i, len([float(r[i]) for r in dataRows]), [float(r[i]) for r in dataRows][0])
           finalDataSet.append([float(r[i]) for r in dataRows])
 
       # *.avr files
