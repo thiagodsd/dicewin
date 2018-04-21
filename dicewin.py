@@ -576,7 +576,7 @@ class graphMainWindow(QtGui.QMainWindow):
             if '#' not in line:
               dataRows.append([i for i in ((line.rstrip()).split()) if '.' in i])
         for i in range(0, len(dataRows[0])):
-          print(i, len([float(r[i]) for r in dataRows]), [float(r[i]) for r in dataRows][0])
+          #print(i, len([float(r[i]) for r in dataRows]), [float(r[i]) for r in dataRows][0])
           finalDataSet.append([float(r[i]) for r in dataRows])
 
       # *.avr files
@@ -875,10 +875,10 @@ class graphMainWindow(QtGui.QMainWindow):
                 dataSet[0].append( value )
                 if float(self.yData[index]) < 1e-20:
                   dataSet[1].append(0.0)
-                  print(float(self.yData[index]), 0.0)
+                  #print(float(self.yData[index]), 0.0)
                 else:
                   dataSet[1].append( -(1.985e-3) * float(self.temperature.text()) * numpy.log(float(self.yData[index])) )
-                  print(float(self.yData[index]), (1.985e-3) * float(self.temperature.text()) * numpy.log(float(self.yData[index])))
+                  #print(float(self.yData[index]), (1.985e-3) * float(self.temperature.text()) * numpy.log(float(self.yData[index])))
                 dataSet[2].append( self.nrData[index] )
         
         elif (self.canvasInfo['type'] == 'line') or (self.canvasInfo['type'] == 'scatter'):
@@ -1724,7 +1724,7 @@ class graphMainWindow(QtGui.QMainWindow):
         Nr = self.canvasInfo['data'][2]
         NewGr = self.canvasInfo['user data']
         
-        print(xmin, xmax, ymin, ymax)
+        #print(xmin, xmax, ymin, ymax)
         
         f.write('# {:>15}{:>20}{:>20}{:>20}\n'.format('r', 'New G(r)', 'G(r)', 'N(r)'))
         for index, value in enumerate(r):
