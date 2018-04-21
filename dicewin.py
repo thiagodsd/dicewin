@@ -542,14 +542,14 @@ class graphMainWindow(QtGui.QMainWindow):
               tempLabels = lineRead
             else:
               dataSample = lineRead
-          indexes = [i for i, v in enumerate(dataSample) if not '.' in v]
+          indexes = [i for i, v in enumerate(dataSample) if '.' not in v]
           for i, v in enumerate(tempLabels):
             if i in indexes:
               tempLabels[i] = 'REMOVE'
           labels = [i for i in tempLabels if i != 'REMOVE']
           f.seek(0, 0)
           for line in f:
-            if not 'Mol' in line:
+            if 'Mol' not in line:
               dataRows.append([i for i in ((line.rstrip()).split()) if '.' in i])
         for i in range(0, len(dataRows[0])):
           finalDataSet.append([float(r[i]) for r in dataRows])
@@ -561,19 +561,19 @@ class graphMainWindow(QtGui.QMainWindow):
             # 5 is an arbitrary number of lines to read in order to get the columns titles.
             lineRead = ((f.readline()).rstrip())
             if '#' in lineRead:
-              if not 'Criteria' in lineRead:
+              if 'Criteria' not in lineRead:
                 tempLabels = lineRead.split()[1:]
             else:
               lineRead = re.sub('\\s+(?=[^()]*\\))', '', lineRead.replace('(', ' ('))
               dataSample = lineRead.split()
-          indexes = [i for i, v in enumerate(dataSample) if not '.' in v]
+          indexes = [i for i, v in enumerate(dataSample) if '.' not in v]
           for i, v in enumerate(tempLabels):
             if i in indexes:
               tempLabels[i] = 'REMOVE'
           labels = [i for i in tempLabels if i != 'REMOVE']
           f.seek(0, 0)
           for line in f:
-            if not '#' in line:
+            if '#' not in line:
               dataRows.append([i for i in ((line.rstrip()).split()) if '.' in i])
         for i in range(0, len(dataRows[0])):
           print(i, len([float(r[i]) for r in dataRows]), [float(r[i]) for r in dataRows][0])
