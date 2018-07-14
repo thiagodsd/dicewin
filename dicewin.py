@@ -7,12 +7,12 @@ import re
 import time
 import numpy
 import matplotlib
-matplotlib.use('Qt4Agg')
+matplotlib.use('Qt5Agg')
 import matplotlib.pyplot
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
-from PyQt4 import QtGui, QtCore
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from PyQt5 import QtCore, QtGui, QtWidgets
 from scipy.odr import ODR, Model, Data, RealData
 
 
@@ -27,7 +27,7 @@ class mplCustomizedToolbar(NavigationToolbar):
 
 
 
-class graphMainWindow(QtGui.QMainWindow):
+class graphMainWindow(QtWidgets.QMainWindow):
   typeGraphMenu = [
     'line', 
     'scatter',
@@ -68,12 +68,12 @@ class graphMainWindow(QtGui.QMainWindow):
 
   def __init__(self, parent=None):
     super().__init__(parent)
-    #QtGui.QShortcut(QtGui.QKeySequence('Shift+Return'), self, self.plot)
-    #self.setWindowIcon(QtGui.QIcon('icone.png'))
+    #QtWidgets.QShortcut(QtWidgets.QKeySequence('Shift+Return'), self, self.plot)
+    #self.setWindowIcon(QtWidgets.QIcon('icone.png'))
     #icone.png -> https://www.dropbox.com/s/t4kyvv3uhpb3a4a/icone.png
     self.setWindowTitle('Interface')
     self.upperMenuBar()
-    self.status = QtGui.QStatusBar()
+    self.status = QtWidgets.QStatusBar()
     self.setStatusBar(self.status)
     self.layoutElements()
 
@@ -85,52 +85,52 @@ class graphMainWindow(QtGui.QMainWindow):
     Set up the widgets that will compose the main window.
     """
     ## graph options widgets
-    self.eijMenulLabel = QtGui.QLabel('Output list:')
+    self.eijMenulLabel = QtWidgets.QLabel('Output list:')
     self.eijMenulLabel.hide()
-    self.eijMenu = QtGui.QComboBox()
+    self.eijMenu = QtWidgets.QComboBox()
     self.eijMenu.addItems(self.eijMenuItems)
     self.eijMenu.setStyleSheet('QComboBox {combobox-popup: 0;}')
     self.eijMenu.setMaxVisibleItems(10)
     self.eijMenu.currentIndexChanged.connect(self.changeSimulationOutput)
     self.eijMenu.hide()
 
-    self.dataXMenu = QtGui.QComboBox()
+    self.dataXMenu = QtWidgets.QComboBox()
     self.dataXMenu.addItems(self.labels)
     self.dataXMenu.currentIndexChanged.connect(self.changeXData)
 
-    self.dataYMenu = QtGui.QComboBox()
+    self.dataYMenu = QtWidgets.QComboBox()
     self.dataYMenu.addItems(self.labels)
     self.dataYMenu.currentIndexChanged.connect(self.changeYData)
 
-    self.intervalXMin = QtGui.QLineEdit()
-    self.intervalXMax = QtGui.QLineEdit()
-    self.intervalYMin = QtGui.QLineEdit()
-    self.intervalYMax = QtGui.QLineEdit()
+    self.intervalXMin = QtWidgets.QLineEdit()
+    self.intervalXMax = QtWidgets.QLineEdit()
+    self.intervalYMin = QtWidgets.QLineEdit()
+    self.intervalYMax = QtWidgets.QLineEdit()
 
-    self.plotXIntervalMin = QtGui.QLineEdit()
-    self.plotXIntervalMax = QtGui.QLineEdit()
-    self.plotYIntervalMin = QtGui.QLineEdit()
-    self.plotYIntervalMax = QtGui.QLineEdit()
+    self.plotXIntervalMin = QtWidgets.QLineEdit()
+    self.plotXIntervalMax = QtWidgets.QLineEdit()
+    self.plotYIntervalMin = QtWidgets.QLineEdit()
+    self.plotYIntervalMax = QtWidgets.QLineEdit()
 
 
     ## histogram options widgets
-    self.histIndexMin = QtGui.QDoubleSpinBox()
+    self.histIndexMin = QtWidgets.QDoubleSpinBox()
     self.histIndexMin.setDecimals(0)
-    self.histIndexMin.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+    self.histIndexMin.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
 
-    self.histIndexMax = QtGui.QDoubleSpinBox()
+    self.histIndexMax = QtWidgets.QDoubleSpinBox()
     self.histIndexMax.setDecimals(0)
-    self.histIndexMax.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+    self.histIndexMax.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
 
-    self.binValue = QtGui.QDoubleSpinBox()
+    self.binValue = QtWidgets.QDoubleSpinBox()
     self.binValue.setDecimals(0)
-    self.binValue.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+    self.binValue.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
 
 
     ## autocorrelation options widgets
-    self.largestT = QtGui.QLineEdit()
+    self.largestT = QtWidgets.QLineEdit()
     
-    self.expMenu = QtGui.QComboBox()
+    self.expMenu = QtWidgets.QComboBox()
     self.expMenu.addItems([
       'A1*exp(-t/B1)', 
       'A1*exp(-t/B1)+A2*exp(-t/B2)',
@@ -138,57 +138,57 @@ class graphMainWindow(QtGui.QMainWindow):
       ])
     self.expMenu.currentIndexChanged.connect(self.changeFitParameters)
     
-    self.A1 = QtGui.QLineEdit()
+    self.A1 = QtWidgets.QLineEdit()
     self.A1.setPlaceholderText('A1')
     self.A1.setEnabled(True)
     
-    self.A2 = QtGui.QLineEdit()
+    self.A2 = QtWidgets.QLineEdit()
     self.A2.setPlaceholderText('A2')
     self.A2.setEnabled(False)
     
-    self.A3 = QtGui.QLineEdit()
+    self.A3 = QtWidgets.QLineEdit()
     self.A3.setPlaceholderText('A3')
     self.A3.setEnabled(False)
     
-    self.B1 = QtGui.QLineEdit()
+    self.B1 = QtWidgets.QLineEdit()
     self.B1.setPlaceholderText('B1')
     self.B1.setEnabled(True)
     
-    self.B2 = QtGui.QLineEdit()
+    self.B2 = QtWidgets.QLineEdit()
     self.B2.setPlaceholderText('B2')
     self.B2.setEnabled(False)
     
-    self.B3 = QtGui.QLineEdit()
+    self.B3 = QtWidgets.QLineEdit()
     self.B3.setPlaceholderText('B3')
     self.B3.setEnabled(False)
     
-    self.buttonApply = QtGui.QPushButton('Apply')
+    self.buttonApply = QtWidgets.QPushButton('Apply')
     self.buttonApply.clicked.connect(self.applyUserParameters)
     
-    self.largestTLabel = QtGui.QLabel('')
+    self.largestTLabel = QtWidgets.QLabel('')
     
     ## rdf widgets
-    self.grMenu = QtGui.QComboBox()
+    self.grMenu = QtWidgets.QComboBox()
     self.grMenu.addItems(self.grMenuItems)
     self.grMenu.setStyleSheet('QComboBox {combobox-popup: 0;}')
     self.grMenu.setMaxVisibleItems(10)
     self.grMenu.currentIndexChanged.connect(self.changeXData)
     self.grMenu.currentIndexChanged.connect(self.changeYData)
 
-    self.molDimA = QtGui.QLineEdit()
-    self.molDimB = QtGui.QLineEdit()
-    self.molDimC = QtGui.QLineEdit()
+    self.molDimA = QtWidgets.QLineEdit()
+    self.molDimB = QtWidgets.QLineEdit()
+    self.molDimC = QtWidgets.QLineEdit()
     
-    self.buttonApplyRDF = QtGui.QPushButton('Apply')
+    self.buttonApplyRDF = QtWidgets.QPushButton('Apply')
     self.buttonApplyRDF.clicked.connect(self.applyMolDim)
     
     
     ## ueff widgets
-    self.temperature = QtGui.QLineEdit()
+    self.temperature = QtWidgets.QLineEdit()
     self.temperature.setText('298.0')
     
     ## canvas widgets
-    self.graphxyFrame = QtGui.QWidget()
+    self.graphxyFrame = QtWidgets.QWidget()
     self.graphxyFigure = Figure(facecolor='white', dpi=72)
     self.graphxyFigure.set_size_inches(8.0, 5.5)
     self.graphxyCanvas = FigureCanvas(self.graphxyFigure)
@@ -197,38 +197,38 @@ class graphMainWindow(QtGui.QMainWindow):
     self.cid = self.graphxyFigure.canvas.mpl_connect('button_press_event', self.clickIntegral)
     self.mpl_toolbar = mplCustomizedToolbar(self.graphxyCanvas, self.graphxyFrame)
     
-    self.checkOverplot = QtGui.QCheckBox('Overplot')
+    self.checkOverplot = QtWidgets.QCheckBox('Overplot')
 
-    self.buttonRedefinePlotInterval = QtGui.QPushButton('Apply')
+    self.buttonRedefinePlotInterval = QtWidgets.QPushButton('Apply')
     self.buttonRedefinePlotInterval.clicked.connect(self.applyCanvasBoundaries)
 
-    self.buttonViewAll = QtGui.QPushButton('View all')
+    self.buttonViewAll = QtWidgets.QPushButton('View all')
     self.buttonViewAll.clicked.connect(self.viewAll)
     
     ## output widgets
-    self.oa1 = QtGui.QLabel('A1=')
-    self.oa2 = QtGui.QLabel('A2=')
-    self.oa3 = QtGui.QLabel('A3=')
-    self.ob1 = QtGui.QLabel('B1=')
-    self.ob2 = QtGui.QLabel('B2=')
-    self.ob3 = QtGui.QLabel('B3=')
+    self.oa1 = QtWidgets.QLabel('A1=')
+    self.oa2 = QtWidgets.QLabel('A2=')
+    self.oa3 = QtWidgets.QLabel('A3=')
+    self.ob1 = QtWidgets.QLabel('B1=')
+    self.ob2 = QtWidgets.QLabel('B2=')
+    self.ob3 = QtWidgets.QLabel('B3=')
     
-    self.fittingLabel = QtGui.QLabel('fitting<br/>parameters')
+    self.fittingLabel = QtWidgets.QLabel('fitting<br/>parameters')
     
-    self.integralLabel = QtGui.QLabel('')
+    self.integralLabel = QtWidgets.QLabel('')
     
-    self.meanLabel = QtGui.QLabel('')
+    self.meanLabel = QtWidgets.QLabel('')
     
-    self.stdDeviationLabel = QtGui.QLabel('')
+    self.stdDeviationLabel = QtWidgets.QLabel('')
 
-    self.typeGraph = QtGui.QComboBox()
+    self.typeGraph = QtWidgets.QComboBox()
     self.typeGraph.addItems(self.typeGraphMenu)
     self.typeGraph.currentIndexChanged.connect(self.changeDefaultBoundaries)
 
-    self.buttonPlot = QtGui.QPushButton('Show')
+    self.buttonPlot = QtWidgets.QPushButton('Show')
     self.buttonPlot.clicked.connect(self.plot)
     
-    self.buttonSave = QtGui.QPushButton('Save')
+    self.buttonSave = QtWidgets.QPushButton('Save')
     self.buttonSave.clicked.connect(self.savePlotData)
     
     self.intervalXMin.returnPressed.connect(self.plot)
@@ -279,103 +279,103 @@ class graphMainWindow(QtGui.QMainWindow):
       self.temperature
       ]
     for e in AllEntries:
-      e.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+      e.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
     
     
-    self.horizontalLine = QtGui.QFrame()
-    self.horizontalLine.setFrameShape(QtGui.QFrame.HLine)
-    self.horizontalLine.setFrameShadow(QtGui.QFrame.Sunken)
-    self.blankWidget = QtGui.QWidget()
+    self.horizontalLine = QtWidgets.QFrame()
+    self.horizontalLine.setFrameShape(QtWidgets.QFrame.HLine)
+    self.horizontalLine.setFrameShadow(QtWidgets.QFrame.Sunken)
+    self.blankWidget = QtWidgets.QWidget()
 
     ## graph options frame
-    self.gridGraphEntries = QtGui.QGridLayout()
+    self.gridGraphEntries = QtWidgets.QGridLayout()
     self.gridGraphEntries.addWidget(self.eijMenulLabel, 0, 0, 1, 1, QtCore.Qt.AlignHCenter)
     self.gridGraphEntries.addWidget(self.eijMenu, 0, 1, 1, 4)
-    self.gridGraphEntries.addWidget(QtGui.QLabel('<small>x-axis</small>'), 1, 1, 1, 1, QtCore.Qt.AlignHCenter)
-    self.gridGraphEntries.addWidget(QtGui.QLabel('<small>y-axis</small>'), 1, 4, 1, 1, QtCore.Qt.AlignHCenter)
-    self.gridGraphEntries.addWidget(QtGui.QLabel('Data'), 2, 0, 1, 1, QtCore.Qt.AlignHCenter)
+    self.gridGraphEntries.addWidget(QtWidgets.QLabel('<small>x-axis</small>'), 1, 1, 1, 1, QtCore.Qt.AlignHCenter)
+    self.gridGraphEntries.addWidget(QtWidgets.QLabel('<small>y-axis</small>'), 1, 4, 1, 1, QtCore.Qt.AlignHCenter)
+    self.gridGraphEntries.addWidget(QtWidgets.QLabel('Data'), 2, 0, 1, 1, QtCore.Qt.AlignHCenter)
     self.gridGraphEntries.addWidget(self.dataXMenu, 2, 1, 1, 1)
-    self.gridGraphEntries.addWidget(QtGui.QLabel('Min. value:'), 3, 0, 1, 1, QtCore.Qt.AlignRight)
-    self.gridGraphEntries.addWidget(QtGui.QLabel('Max. value:'), 4, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridGraphEntries.addWidget(QtWidgets.QLabel('Min. value:'), 3, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridGraphEntries.addWidget(QtWidgets.QLabel('Max. value:'), 4, 0, 1, 1, QtCore.Qt.AlignRight)
     self.gridGraphEntries.addWidget(self.intervalXMin, 3, 1, 1, 1)
     self.gridGraphEntries.addWidget(self.intervalXMax, 4, 1, 1, 1)
-    self.gridGraphEntries.addWidget(QtGui.QLabel('<b>Data<b/>'), 2, 3, 1, 1, QtCore.Qt.AlignHCenter)
+    self.gridGraphEntries.addWidget(QtWidgets.QLabel('<b>Data<b/>'), 2, 3, 1, 1, QtCore.Qt.AlignHCenter)
     self.gridGraphEntries.addWidget(self.dataYMenu, 2, 4, 1, 1)
-    self.gridGraphEntries.addWidget(QtGui.QLabel('Min. value:'), 3, 3, 1, 1, QtCore.Qt.AlignRight)
-    self.gridGraphEntries.addWidget(QtGui.QLabel('Max. value:'), 4, 3, 1, 1, QtCore.Qt.AlignRight)
+    self.gridGraphEntries.addWidget(QtWidgets.QLabel('Min. value:'), 3, 3, 1, 1, QtCore.Qt.AlignRight)
+    self.gridGraphEntries.addWidget(QtWidgets.QLabel('Max. value:'), 4, 3, 1, 1, QtCore.Qt.AlignRight)
     self.gridGraphEntries.addWidget(self.intervalYMin, 3, 4, 1, 1)
     self.gridGraphEntries.addWidget(self.intervalYMax, 4, 4, 1, 1)
     
-    self.widgetButtonsEntries = QtGui.QGroupBox('Line and Scatter options')
+    self.widgetButtonsEntries = QtWidgets.QGroupBox('Line and Scatter options')
     self.widgetButtonsEntries.setLayout(self.gridGraphEntries)
     
     ## histogram options frame
-    self.gridHistogramEntries = QtGui.QGridLayout()
-    self.gridHistogramEntries.addWidget(QtGui.QLabel('Num. of bins:'), 0, 0, 2, 1, QtCore.Qt.AlignRight)
+    self.gridHistogramEntries = QtWidgets.QGridLayout()
+    self.gridHistogramEntries.addWidget(QtWidgets.QLabel('Num. of bins:'), 0, 0, 2, 1, QtCore.Qt.AlignRight)
     self.gridHistogramEntries.addWidget(self.binValue, 0, 1, 2, 1, QtCore.Qt.AlignVCenter)
-    self.gridHistogramEntries.addWidget(QtGui.QLabel('Min. index:'), 0, 2, 1, 1, QtCore.Qt.AlignRight)
+    self.gridHistogramEntries.addWidget(QtWidgets.QLabel('Min. index:'), 0, 2, 1, 1, QtCore.Qt.AlignRight)
     self.gridHistogramEntries.addWidget(self.histIndexMin, 0, 3, 1, 1)
-    self.gridHistogramEntries.addWidget(QtGui.QLabel('Max. index:'), 1, 2, 1, 1, QtCore.Qt.AlignRight)
+    self.gridHistogramEntries.addWidget(QtWidgets.QLabel('Max. index:'), 1, 2, 1, 1, QtCore.Qt.AlignRight)
     self.gridHistogramEntries.addWidget(self.histIndexMax, 1, 3, 1, 1)
     
-    self.widgetHistogramEntries = QtGui.QGroupBox('Histogram options')
+    self.widgetHistogramEntries = QtWidgets.QGroupBox('Histogram options')
     self.widgetHistogramEntries.setLayout(self.gridHistogramEntries)
     
     ## autocorrelation options frame    
-    self.gridAutoCorrEntries = QtGui.QGridLayout()
-    self.gridAutoCorrEntries.addWidget(QtGui.QLabel('Fit type:'), 1, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridAutoCorrEntries = QtWidgets.QGridLayout()
+    self.gridAutoCorrEntries.addWidget(QtWidgets.QLabel('Fit type:'), 1, 0, 1, 1, QtCore.Qt.AlignRight)
     self.gridAutoCorrEntries.addWidget(self.expMenu, 1, 1, 1, 4)
-    self.gridAutoCorrEntries.addWidget(QtGui.QLabel('A:'), 2, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridAutoCorrEntries.addWidget(QtWidgets.QLabel('A:'), 2, 0, 1, 1, QtCore.Qt.AlignRight)
     self.gridAutoCorrEntries.addWidget(self.A1, 2, 1, 1, 1)
     self.gridAutoCorrEntries.addWidget(self.A2, 2, 2, 1, 1)
     self.gridAutoCorrEntries.addWidget(self.A3, 2, 3, 1, 1)
-    self.gridAutoCorrEntries.addWidget(QtGui.QLabel('B:'), 3, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridAutoCorrEntries.addWidget(QtWidgets.QLabel('B:'), 3, 0, 1, 1, QtCore.Qt.AlignRight)
     self.gridAutoCorrEntries.addWidget(self.B1, 3, 1, 1, 1)
     self.gridAutoCorrEntries.addWidget(self.B2, 3, 2, 1, 1)
     self.gridAutoCorrEntries.addWidget(self.B3, 3, 3, 1, 1)
-    self.gridAutoCorrEntries.addWidget(QtGui.QLabel('Largest t:'), 4, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridAutoCorrEntries.addWidget(QtWidgets.QLabel('Largest t:'), 4, 0, 1, 1, QtCore.Qt.AlignRight)
     self.gridAutoCorrEntries.addWidget(self.largestT, 4, 1, 1, 1)
     self.gridAutoCorrEntries.addWidget(self.largestTLabel, 4, 2, 1, 2)
     self.gridAutoCorrEntries.addWidget(self.buttonApply, 4, 3, 1, 1)
     
-    self.widgetAutoCorrEntries = QtGui.QGroupBox('Autocorrelation options')
+    self.widgetAutoCorrEntries = QtWidgets.QGroupBox('Autocorrelation options')
     self.widgetAutoCorrEntries.setLayout(self.gridAutoCorrEntries)
     
     ## rdf options frame
-    self.gridGr = QtGui.QGridLayout()
+    self.gridGr = QtWidgets.QGridLayout()
     self.gridGr.addWidget(self.grMenu, 0, 0, 1, 3)
-    self.gridGr.addWidget(QtGui.QLabel('<small>MOLECULAR DIMENSIONS</small>'), 1, 0, 1, 3, QtCore.Qt.AlignLeft)
-    #self.gridGr.addWidget(QtGui.QLabel('A:'), 2, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridGr.addWidget(QtWidgets.QLabel('<small>MOLECULAR DIMENSIONS</small>'), 1, 0, 1, 3, QtCore.Qt.AlignLeft)
+    #self.gridGr.addWidget(QtWidgets.QLabel('A:'), 2, 0, 1, 1, QtCore.Qt.AlignRight)
     self.gridGr.addWidget(self.molDimA, 2, 0, 1, 1)
-    #self.gridGr.addWidget(QtGui.QLabel('B:'), 2, 2, 1, 1, QtCore.Qt.AlignRight)
+    #self.gridGr.addWidget(QtWidgets.QLabel('B:'), 2, 2, 1, 1, QtCore.Qt.AlignRight)
     self.gridGr.addWidget(self.molDimB, 2, 1, 1, 1)
-    #self.gridGr.addWidget(QtGui.QLabel('C:'), 2, 4, 1, 1, QtCore.Qt.AlignRight)
+    #self.gridGr.addWidget(QtWidgets.QLabel('C:'), 2, 4, 1, 1, QtCore.Qt.AlignRight)
     self.gridGr.addWidget(self.molDimC, 2, 2, 1, 1)
     self.gridGr.addWidget(self.buttonApplyRDF, 3, 2, 1, 1)
-    self.gridGr.addWidget(QtGui.QLabel('<b>Ueff options</b>'), 4, 0, 1, 3)
-    self.gridGr.addWidget(QtGui.QLabel('Temperature:'), 5, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridGr.addWidget(QtWidgets.QLabel('<b>Ueff options</b>'), 4, 0, 1, 3)
+    self.gridGr.addWidget(QtWidgets.QLabel('Temperature:'), 5, 0, 1, 1, QtCore.Qt.AlignRight)
     self.gridGr.addWidget(self.temperature, 5, 1, 1, 1)
-    self.gridGr.addWidget(QtGui.QLabel('K'), 5, 2, 1, 1)
+    self.gridGr.addWidget(QtWidgets.QLabel('K'), 5, 2, 1, 1)
     #self.gridGr.setColumnStretch(0, 2)
     #self.gridGr.setColumnStretch(1, 1)
     #self.gridGr.setColumnStretch(2, 2)
     
-    self.widgetGr = QtGui.QGroupBox('RDF options')
+    self.widgetGr = QtWidgets.QGroupBox('RDF options')
     self.widgetGr.setLayout(self.gridGr)
     self.widgetGr.hide()
     
     ## Ueff options frame
-    #self.gridUeff = QtGui.QUeffidLayout()
-    #self.gridUeff.addWidget(QtGui.QLabel('Temperature'), 0, 0, 1, 1)
+    #self.gridUeff = QtWidgets.QUeffidLayout()
+    #self.gridUeff.addWidget(QtWidgets.QLabel('Temperature'), 0, 0, 1, 1)
     #self.gridUeff.addWidget(self.temperature, 0, 1, 1, 1)
-    #self.gridUeff.addWidget(QtGui.QLabel('K'), 0, 3, 1, 1)
+    #self.gridUeff.addWidget(QtWidgets.QLabel('K'), 0, 3, 1, 1)
     
-    #self.widgetUeff = QtGui.QUeffoupBox('Ueff options')
+    #self.widgetUeff = QtWidgets.QUeffoupBox('Ueff options')
     #self.widgetUeff.setLayout(self.gridUeff)
     #self.widgetUeff.hide()
     
     ## type of graph
-    self.gridTypeOfGraph = QtGui.QGridLayout()
+    self.gridTypeOfGraph = QtWidgets.QGridLayout()
     self.gridTypeOfGraph.addWidget(self.typeGraph, 0 , 0, 1, 1)
     self.gridTypeOfGraph.addWidget(self.buttonPlot, 0, 1, 1, 1)
     self.gridTypeOfGraph.addWidget(self.buttonSave, 0, 2, 1, 1)
@@ -383,11 +383,11 @@ class graphMainWindow(QtGui.QMainWindow):
     self.gridTypeOfGraph.setColumnStretch(1, 1)
     self.gridTypeOfGraph.setColumnStretch(2, 1)
     
-    self.widgetTypeOfGraph = QtGui.QGroupBox('Graph options')
+    self.widgetTypeOfGraph = QtWidgets.QGroupBox('Graph options')
     self.widgetTypeOfGraph.setLayout(self.gridTypeOfGraph)
     
     ## output frame
-    self.gridOutput = QtGui.QGridLayout()
+    self.gridOutput = QtWidgets.QGridLayout()
     self.gridOutput.addWidget(self.meanLabel, 1, 0, 1, 2)
     self.gridOutput.addWidget(self.stdDeviationLabel, 1, 2, 1, 2)
     self.gridOutput.addWidget(self.integralLabel, 0, 0, 1, 1)
@@ -399,27 +399,27 @@ class graphMainWindow(QtGui.QMainWindow):
     self.gridOutput.addWidget(self.ob2, 3, 2, 1, 1)
     self.gridOutput.addWidget(self.ob3, 3, 3, 1, 1)
     
-    self.widgetOutput = QtGui.QFrame()
-    self.widgetOutput.setFrameShape(QtGui.QFrame.StyledPanel)
+    self.widgetOutput = QtWidgets.QFrame()
+    self.widgetOutput.setFrameShape(QtWidgets.QFrame.StyledPanel)
     self.widgetOutput.setLayout(self.gridOutput)
     
     ## graph intervals frame
-    self.gridAxesIntervals = QtGui.QGridLayout()
-    self.gridAxesIntervals.addWidget(QtGui.QLabel('Min. X:'), 0, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridAxesIntervals = QtWidgets.QGridLayout()
+    self.gridAxesIntervals.addWidget(QtWidgets.QLabel('Min. X:'), 0, 0, 1, 1, QtCore.Qt.AlignRight)
     self.gridAxesIntervals.addWidget(self.plotXIntervalMin, 0, 1, 1, 1)
-    self.gridAxesIntervals.addWidget(QtGui.QLabel('Max. X:'), 0, 2, 1, 1, QtCore.Qt.AlignRight)
+    self.gridAxesIntervals.addWidget(QtWidgets.QLabel('Max. X:'), 0, 2, 1, 1, QtCore.Qt.AlignRight)
     self.gridAxesIntervals.addWidget(self.plotXIntervalMax, 0, 3, 1, 1)
-    self.gridAxesIntervals.addWidget(QtGui.QLabel('Min. Y:'), 1, 0, 1, 1, QtCore.Qt.AlignRight)
+    self.gridAxesIntervals.addWidget(QtWidgets.QLabel('Min. Y:'), 1, 0, 1, 1, QtCore.Qt.AlignRight)
     self.gridAxesIntervals.addWidget(self.plotYIntervalMin, 1, 1, 1, 1)
-    self.gridAxesIntervals.addWidget(QtGui.QLabel('Max. Y:'), 1, 2, 1, 1, QtCore.Qt.AlignRight)
+    self.gridAxesIntervals.addWidget(QtWidgets.QLabel('Max. Y:'), 1, 2, 1, 1, QtCore.Qt.AlignRight)
     self.gridAxesIntervals.addWidget(self.plotYIntervalMax, 1, 3, 1, 1)
     self.gridAxesIntervals.addWidget(self.buttonRedefinePlotInterval, 0, 4, 2, 1)
     
-    self.widgetAxesIntervals = QtGui.QGroupBox('Axes range options')
+    self.widgetAxesIntervals = QtWidgets.QGroupBox('Axes range options')
     self.widgetAxesIntervals.setLayout(self.gridAxesIntervals)
     
     ## canvas frame
-    self.boxGraph = QtGui.QGridLayout()
+    self.boxGraph = QtWidgets.QGridLayout()
     self.boxGraph.addWidget(self.mpl_toolbar, 0, 0, 1, 3)
     self.boxGraph.addWidget(self.horizontalLine, 1, 0, 1, 3)
     self.boxGraph.addWidget(self.graphxyCanvas, 2, 0, 1, 3)
@@ -430,13 +430,13 @@ class graphMainWindow(QtGui.QMainWindow):
     self.boxGraph.setColumnStretch(1, 1)
     self.boxGraph.setColumnStretch(2, 2)
     
-    self.frameGraph = QtGui.QFrame()
-    self.frameGraph.setFrameShape(QtGui.QFrame.StyledPanel)
+    self.frameGraph = QtWidgets.QFrame()
+    self.frameGraph.setFrameShape(QtWidgets.QFrame.StyledPanel)
     self.frameGraph.setLayout(self.boxGraph)
-    self.frameGraph.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+    self.frameGraph.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
     
     ##
-    self.boxOuterFrame = QtGui.QGridLayout()
+    self.boxOuterFrame = QtWidgets.QGridLayout()
     self.boxOuterFrame.addWidget(self.widgetButtonsEntries, 0, 0, 1, 1)
     self.boxOuterFrame.addWidget(self.widgetHistogramEntries, 1, 0, 1, 1)
     self.boxOuterFrame.addWidget(self.widgetAutoCorrEntries, 2, 0, 1, 1)
@@ -445,12 +445,12 @@ class graphMainWindow(QtGui.QMainWindow):
     self.boxOuterFrame.addWidget(self.widgetOutput, 4 , 0, 1, 1)
     self.boxOuterFrame.addWidget(self.frameGraph, 0, 1, 5, 1)
     
-    self.mainFrame = QtGui.QWidget()
+    self.mainFrame = QtWidgets.QWidget()
     self.mainFrame.setLayout(self.boxOuterFrame)
-    self.mainFrame.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+    self.mainFrame.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
 
     self.setCentralWidget(self.mainFrame)
-    self.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+    self.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
   
 
 
@@ -463,24 +463,24 @@ class graphMainWindow(QtGui.QMainWindow):
     
     menuFile = upperMenuBar.addMenu('&File')
 
-    openAction = QtGui.QAction('Open...', self)
+    openAction = QtWidgets.QAction('Open...', self)
     openAction.setShortcut('Ctrl+O')
     openAction.triggered.connect(self.selectDataFile)
     menuFile.addAction(openAction)
     menuFile.addSeparator()
 
-    saveDataAs = QtGui.QAction('Save data', self)
+    saveDataAs = QtWidgets.QAction('Save data', self)
     saveDataAs.setShortcut('Ctrl+S')
     saveDataAs.triggered.connect(self.savePlotData)
     menuFile.addAction(saveDataAs)
     menuFile.addSeparator()
 
-    closeAction = QtGui.QAction('Close', self)
+    closeAction = QtWidgets.QAction('Close', self)
     closeAction.setShortcut('Ctrl+C')
     menuFile.addAction(closeAction)
     
     menuAbout = upperMenuBar.addMenu('&About')
-    infoAction = QtGui.QAction('Info', self)
+    infoAction = QtWidgets.QAction('Info', self)
     infoAction.triggered.connect(self.aboutWindow)
     menuAbout.addAction(infoAction)
   
@@ -491,14 +491,14 @@ class graphMainWindow(QtGui.QMainWindow):
     (None) -> None
     Create a pop-up window containing information about the interface.
     """
-    info = QtGui.QMessageBox()
+    info = QtWidgets.QMessageBox()
     info.setWindowTitle('About')
     info.setText('Application written in Python<br/><br/> \
                   Authors: Thiago Duarte and Kaline Coutinho<br/> \
                   Institution: Physics Institute, University of Sao Paulo<br/> \
                   Funding: CNPq-PIBIC<br/> \
                   Year: 2015<br/><br/> \
-                  Last modified date: June 14, 2017')
+                  Last modified date: July 14, 2018')
     info.setIcon(1)
     info.exec_()
 
@@ -509,10 +509,10 @@ class graphMainWindow(QtGui.QMainWindow):
     (None) -> List, List, List, List, String, String
     Create a window that allows the user to select the file which will be read. Return the data read and file name information.
     """
-    openFile = QtGui.QFileDialog()
-    openFile.setFileMode(QtGui.QFileDialog.ExistingFile)
+    openFile = QtWidgets.QFileDialog()
+    openFile.setFileMode(QtWidgets.QFileDialog.ExistingFile)
     openFile.setViewMode(0)
-    selectedFileName = openFile.getOpenFileName()
+    selectedFileName = openFile.getOpenFileName()[0]
     
     if selectedFileName:
       [labels, dataRows, finalDataSet, grItems, eijItems, tempLabels, dataSample, finalLabels, dataBlock] = [[] for i in range(0,9)]
@@ -855,7 +855,7 @@ class graphMainWindow(QtGui.QMainWindow):
       IDhMAX = int(self.histIndexMax.value())
 
       if (xMIN <= xMAX) and (yMIN <= yMAX):
-        QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         dataSet = [[],[],[]]
 
         if (self.canvasInfo['type'] == 'histogram'):
@@ -875,10 +875,10 @@ class graphMainWindow(QtGui.QMainWindow):
                 dataSet[0].append( value )
                 if float(self.yData[index]) < 1e-20:
                   dataSet[1].append(0.0)
-                  #print(float(self.yData[index]), 0.0)
+                  ##print(float(self.yData[index]), 0.0)
                 else:
                   dataSet[1].append( -(1.985e-3) * float(self.temperature.text()) * numpy.log(float(self.yData[index])) )
-                  #print(float(self.yData[index]), (1.985e-3) * float(self.temperature.text()) * numpy.log(float(self.yData[index])))
+                  ##print(float(self.yData[index]), (1.985e-3) * float(self.temperature.text()) * numpy.log(float(self.yData[index])))
                 dataSet[2].append( self.nrData[index] )
         
         elif (self.canvasInfo['type'] == 'line') or (self.canvasInfo['type'] == 'scatter'):
@@ -896,7 +896,7 @@ class graphMainWindow(QtGui.QMainWindow):
                   dataSet[0].append( value )
                   dataSet[1].append( self.yData[index] )
         
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         return dataSet
       else:
         self.status.showMessage('ERROR: invalid data interval range, Min. value > Max. value. \
@@ -1104,10 +1104,10 @@ class graphMainWindow(QtGui.QMainWindow):
           yLabel = (self.labels[ yid ]).replace('_','-')
           self.plotTitles.append(r'$C(t) \times t\,\,\, ({})$'.format(yLabel))
           
-          QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+          QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
           x = numpy.arange( len(data[1]) )
           y = self.estimated_autocorrelation( numpy.array(data[1]) )
-          QtGui.QApplication.restoreOverrideCursor()
+          QtWidgets.QApplication.restoreOverrideCursor()
           
           self.canvasInfo['title'] = '{}'.format(yLabel)
           self.canvasInfo['data'] = [x, y]
@@ -1135,8 +1135,10 @@ class graphMainWindow(QtGui.QMainWindow):
       self.graphxyCanvas.draw()
       
     except (AttributeError) as e:
+      #print(e)
       self.status.showMessage('ERROR: failed to plot data. Please check the axes range values.', 3456)
     except (IndexError) as e:
+      #print(e)
       self.status.showMessage('ERROR: failed to plot data. Please check data and axes range values.', 3456)
 
 
@@ -1169,7 +1171,7 @@ class graphMainWindow(QtGui.QMainWindow):
     by the user and another using coeficients generated by a fitting function.
     """
     try:
-      QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+      QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
       if (i == 0):
         fit = Model(self.exponential1)
         guess = [float(k) for k in P[:2]]
@@ -1254,14 +1256,14 @@ class graphMainWindow(QtGui.QMainWindow):
       
       self.viewAllCoord =  [x, X, y, Y]
       
-      QtGui.QApplication.restoreOverrideCursor()
+      QtWidgets.QApplication.restoreOverrideCursor()
     
     except (IndexError) as e:
       self.status.showMessage('ERROR: invalid fitting parameters. Please check your guess then try again.', 3456)
-      QtGui.QApplication.restoreOverrideCursor()
+      QtWidgets.QApplication.restoreOverrideCursor()
     except (ValueError) as e:
       self.status.showMessage('ERROR: invalid fitting parameters. Please check your guess then try again.', 3456)
-      QtGui.QApplication.restoreOverrideCursor()
+      QtWidgets.QApplication.restoreOverrideCursor()
   
   
   
@@ -1629,7 +1631,7 @@ class graphMainWindow(QtGui.QMainWindow):
       # Line and Scatter
       if (self.canvasInfo['type'] == 'line') or (self.canvasInfo['type'] == 'scatter'):
         name = '{}_{}_{}_{}_{}.dat'.format(fname, self.extension, self.canvasInfo['type'], title, timetag)
-        filename = QtGui.QFileDialog.getSaveFileName(self, 'Save file', name)
+        filename = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', name)[0]
         f = open('{}'.format(str(filename)), 'w')
         
         x = self.canvasInfo['data'][0]
@@ -1658,7 +1660,7 @@ class graphMainWindow(QtGui.QMainWindow):
       # Histogram
       elif (self.canvasInfo['type'] == 'histogram'):
         name = '{}_{}_{}_{}_{}.dat'.format(fname, self.extension, self.canvasInfo['type'], title, timetag)
-        filename = QtGui.QFileDialog.getSaveFileName(self, 'Save file', name)
+        filename = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', name)[0]
         f = open('{}'.format(str(filename)), 'w')
         
         bins = self.canvasInfo['data'][1]
@@ -1680,7 +1682,7 @@ class graphMainWindow(QtGui.QMainWindow):
       # Autocorrelation
       elif (self.canvasInfo['type'] == 'autocorrelation'):
         name = '{}_{}_{}_{}_{}.dat'.format(fname, self.extension, self.canvasInfo['type'], title, timetag)
-        filename = QtGui.QFileDialog.getSaveFileName(self, 'Save file', name)
+        filename = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', name)[0]
         f = open('{}'.format(str(filename)), 'w')
         
         if (len(self.eijMenuItems) != 0):
@@ -1712,7 +1714,7 @@ class graphMainWindow(QtGui.QMainWindow):
       # rdf
       elif (self.canvasInfo['type'] == 'gr'):
         name = '{}_{}_{}_{}_{}.dat'.format(fname, self.extension, self.canvasInfo['type'], title, timetag)
-        filename = QtGui.QFileDialog.getSaveFileName(self, 'Save file', name)
+        filename = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', name)[0]
         f = open('{}'.format(str(filename)), 'w')
         
         f.write('# MOLECULAR DIMENSIONS\n')
@@ -1724,7 +1726,7 @@ class graphMainWindow(QtGui.QMainWindow):
         Nr = self.canvasInfo['data'][2]
         NewGr = self.canvasInfo['user data']
         
-        #print(xmin, xmax, ymin, ymax)
+        ##print(xmin, xmax, ymin, ymax)
         
         f.write('# {:>15}{:>20}{:>20}{:>20}\n'.format('r', 'New G(r)', 'G(r)', 'N(r)'))
         for index, value in enumerate(r):
@@ -1736,8 +1738,10 @@ class graphMainWindow(QtGui.QMainWindow):
       self.status.showMessage('File successfully saved.', 3456)
         
     except (IndexError, ValueError) as e:
+      #print(e)
       self.status.showMessage('ERROR: failed to save data. Please try to adjust the data intervals.', 3456)
     except OSError as e:
+      #print(e)
       self.status.showMessage('ERROR: failed to save data.', 3456)
 
     
@@ -1747,7 +1751,7 @@ def main():
   (None) -> None
   Initialize and displace the window.
   """
-  application = QtGui.QApplication(sys.argv)
+  application = QtWidgets.QApplication(sys.argv)
   mainWindow = graphMainWindow()
 
   mainWindow.move(150, 50)
