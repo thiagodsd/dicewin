@@ -192,7 +192,7 @@ class graphMainWindow(QtWidgets.QMainWindow):
     self.graphxyFigure = Figure(facecolor='white', dpi=72)
     self.graphxyFigure.set_size_inches(8.0, 5.5)
     self.graphxyCanvas = FigureCanvas(self.graphxyFigure)
-    self.graphxyAxes = self.graphxyFigure.add_subplot(111, axisbg='white')
+    self.graphxyAxes = self.graphxyFigure.add_subplot(111, facecolor='white')
     self.graphxyCanvas.setParent(self.graphxyFrame)
     self.cid = self.graphxyFigure.canvas.mpl_connect('button_press_event', self.clickIntegral)
     self.mpl_toolbar = mplCustomizedToolbar(self.graphxyCanvas, self.graphxyFrame)
@@ -939,9 +939,9 @@ class graphMainWindow(QtWidgets.QMainWindow):
       
       
       if (self.extension == 'gr') and (self.canvasInfo['type'] != 'autocorrelation'):
-        self.graphxyAxes = self.graphxyFigure.add_axes([0.075, 0.075, 0.7, 0.88], axisbg='white')
+        self.graphxyAxes = self.graphxyFigure.add_axes([0.075, 0.075, 0.7, 0.88], facecolor='white')
       else:
-        self.graphxyAxes = self.graphxyFigure.add_axes([0.1, 0.075, 0.85, 0.85], axisbg='white')
+        self.graphxyAxes = self.graphxyFigure.add_axes([0.1, 0.075, 0.85, 0.85], facecolor='white')
       
       # WIDGETS RESPONSES
       if self.canvasInfo['type'] is not 'histogram':
@@ -1543,7 +1543,7 @@ class graphMainWindow(QtWidgets.QMainWindow):
     
     self.integralMarker = False
     self.graphxyAxes.axis('off')
-    self.graphxyAxes = self.graphxyFigure.add_axes([0.075, 0.075, 0.7, 0.88], axisbg='white')
+    self.graphxyAxes = self.graphxyFigure.add_axes([0.075, 0.075, 0.7, 0.88], facecolor='white')
     
     self.graphxyAxes.hold(graphHold)
     self.graphxyAxes.plot(r, newGr, linestyle='-')
